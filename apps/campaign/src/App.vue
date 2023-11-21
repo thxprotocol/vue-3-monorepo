@@ -1,7 +1,6 @@
 <template>
     <div id="main">
         <router-view />
-        <BaseModalConnectSettings size="lg" />
         <BaseModalWalletCreate />
         <BaseModalWalletRecovery />
         <BaseModalAccount size="lg" />

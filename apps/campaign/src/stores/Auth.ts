@@ -8,6 +8,8 @@ import { getIsMobile } from '../utils/user-agent';
 import { Wallet } from '@ethersproject/wallet';
 import { track } from '@thxnetwork/mixpanel';
 import poll from 'promise-poller';
+// import { worker } from '../utils/worker';
+// console.log(worker);
 
 const userManager = new UserManager({
     authority: AUTH_URL,
@@ -104,12 +106,10 @@ export const useAuthStore = defineStore('auth', {
             poll({ taskFn, interval: 5000, retries: 60 });
         },
         async signout() {
-            if (!this.user) return;
-
             const isMobile = getIsMobile();
             await this.userManager[isMobile ? 'signoutRedirect' : 'signoutPopup']({
                 state: { isMobile, origin: window.location.href },
-                id_token_hint: this.user.id_token,
+                id_token_hint: this.user?.id_token,
             })
                 .then(() => {
                     this.user = null;
@@ -138,8 +138,8 @@ export const useAuthStore = defineStore('auth', {
                 })
                 .catch((error: Error) => {
                     console.log(error);
-                    // Should signout because refresh token is no longer valid
-                    if (error.message === 'grant request is invalid') {
+                    // Should signout because refresh token is no longer valid or auth is required
+                    if (['grant request is invalid', 'End-User authentication is required'].includes(error.message)) {
                         this.signout();
                     }
                 });

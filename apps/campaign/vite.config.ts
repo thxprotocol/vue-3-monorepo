@@ -5,6 +5,7 @@ import mkcert from 'vite-plugin-mkcert';
 import Components from 'unplugin-vue-components/vite';
 import { BootstrapVueNextResolver } from 'unplugin-vue-components/resolvers';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import { VitePWA } from 'vite-plugin-pwa';
 
 const SENTRY_AUTH_TOKEN = process.env.SENTRY_AUTH_TOKEN || '';
 const config: UserConfigExport = {
@@ -54,5 +55,18 @@ if (config.plugins && SENTRY_AUTH_TOKEN) {
         }),
     );
 }
+
+config.plugins?.push(
+    VitePWA({
+        srcDir: 'src',
+        filename: 'service-worker.js',
+        strategies: 'injectManifest',
+        injectRegister: false,
+        manifest: false,
+        injectManifest: {
+            injectionPoint: '',
+        },
+    }),
+);
 
 export default defineConfig(config);
