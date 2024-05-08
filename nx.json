@@ -37,6 +37,11 @@
         "e2e": {
             "cache": true,
             "inputs": ["default", "^production"]
+        },
+        "@nx/webpack:webpack": {
+            "cache": true,
+            "dependsOn": ["^build"],
+            "inputs": ["production", "^production"]
         }
     },
     "namedInputs": {
@@ -64,7 +69,7 @@
             }
         }
     ],
-    "defaultProject": "campaign",
+    "defaultProject": "app",
     "generators": {
         "@nx/web:application": {
             "style": "scss",
